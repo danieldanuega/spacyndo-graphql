@@ -1,14 +1,17 @@
 from flask import Flask
 from flask_graphql import GraphQLView
-from graphene import ObjectType, Field, Schema, String, List
+from graphene import ObjectType, Field, Schema, String, List, relay
 import spacy
 
 app = Flask(__name__)
 nlp = spacy.load('id_ud-tag-dep-ner-1.0.0')
 
 
-# Model --> that represent the structure of the Spacy model and handle the function
+# Model Object --> that represent the structure of the Spacy model and handle the function
 class Model(ObjectType):
+    class Meta:
+        interfaces = (relay.Node, )
+
     text = String()
     token = List(String)
     pos = List(String)
@@ -43,14 +46,21 @@ class Model(ObjectType):
             result.append((ent.text, ent.label_))
         return result
 
+    @classmethod
+    def get_node(cls, info, id):
+        return Model(id=id)
 
-# Schema --> this is the endpoint source of truth
+
+# Root Object, define your query here that actually consume by user later
 class Query(ObjectType):
     do_prediction = Field(Model, text=String(required=True))
+    node = relay.Node.Field()
 
     def resolve_do_prediction(parent, info, text):
         return Model(text=text)
 
+
+# Schema --> this is the endpoint source of truth
 schema = Schema(query=Query)
 
 
