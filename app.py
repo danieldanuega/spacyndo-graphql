@@ -1,9 +1,11 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_graphql import GraphQLView
 from graphene import ObjectType, Field, Schema, String, List, relay
 import spacy
 
 app = Flask(__name__)
+CORS(app)
 nlp = spacy.load('id_ud-tag-dep-ner-1.0.0')
 
 
