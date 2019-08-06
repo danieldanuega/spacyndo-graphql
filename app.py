@@ -33,7 +33,7 @@ class Model(ObjectType):
         predictions = []
         i=0
         for token in doc:
-            predictions.append((i, token.text))
+            predictions.append(('tok-'+str(i), token.text))
             i += 1
         for id, token in predictions:
             prediction = Prediction(id=id, token=token, label="-")
@@ -47,7 +47,7 @@ class Model(ObjectType):
         predictions = []
         i=0
         for token in doc:
-            predictions.append((i, token.text, token.pos_))
+            predictions.append(('pos-'+str(i), token.text, token.pos_))
             i += 1
         for id, token, label in predictions:
             prediction = Prediction(id=id, token=token, label=label)
@@ -61,7 +61,7 @@ class Model(ObjectType):
         predictions = []
         i = 0
         for token in doc:
-            predictions.append((i, token.text, token.dep_))
+            predictions.append(('dep-'+str(i), token.text, token.dep_))
             i += 1
         for id, token, label in predictions:
             prediction = Prediction(id=id, token=token, label=label)
@@ -75,7 +75,7 @@ class Model(ObjectType):
         predictions = []
         i = 0
         for ent in doc.ents:
-            predictions.append((i, ent.text, ent.label_))
+            predictions.append(('ner-'+str(i), ent.text, ent.label_))
             i += 1
         for id, token, label in predictions:
             prediction = Prediction(id=id, token=token, label=label)
